@@ -1,7 +1,18 @@
-FROM kiyoto/fluentd:0.12.3-2.2.0
+FROM gliderlabs/alpine:3.2
 MAINTAINER stephane.cottin@vixns.com
-RUN ["/usr/local/bin/gem", "install", "fluent-plugin-record-reformer", "fluent-plugin-rewrite-tag-filter", "fluent-plugin-kafka", "fluent-plugin-docker-metrics", "fluent-plugin-elasticsearch", "fluent-plugin-multi-format-parser", "fluent-plugin-docker-tag-resolver", "--no-rdoc", "--no-ri"]
-RUN mkdir /etc/fluent /var/log/docker
-ADD fluent.conf /etc/fluent/
 
-ENTRYPOINT ["/usr/local/bundle/bin/fluentd", "-c", "/etc/fluent/fluent.conf"]
+ENV FLUENTD_VERSION 0.12.12
+
+RUN apk-install ca-certificates ruby-dev build-base jemalloc-dev && \
+  echo 'gem: --no-document' >> /etc/gemrc && \
+  gem update --system && \
+  gem install fluentd -v $FLUENTD_VERSION && \
+  gem install fluent-plugin-td && \
+  gem install fluent-plugin-rewrite-tag-filter && \
+  gem install fluent-plugin-kafka && \
+  gem install fluent-plugin-multi-format-parser && \
+  gem install fluent-plugin-docker-tag-resolver && \
+  fluentd --setup /etc/fluent
+
+ENV JEMALLOC_PATH /usr/lib/libjemalloc.so
+ENTRYPOINT ["/usr/bin/fluentd", "-c", "/etc/fluent/fluent.conf"]
