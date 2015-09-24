@@ -1,7 +1,7 @@
 FROM gliderlabs/alpine:3.2
 MAINTAINER stephane.cottin@vixns.com
 
-ENV FLUENTD_VERSION 0.12.12
+ENV FLUENTD_VERSION 0.12.15
 
 RUN apk-install ca-certificates ruby-dev build-base jemalloc-dev && \
   echo 'gem: --no-document' >> /etc/gemrc && \
