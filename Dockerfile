@@ -15,5 +15,5 @@ RUN apk-install ca-certificates ruby-dev build-base jemalloc-dev && \
   fluentd --setup /etc/fluent
 
 ENV JEMALLOC_PATH /usr/lib/libjemalloc.so
-COPY fluentd.conf /etc/fluent/fluentd.conf
+COPY fluentd.conf /etc/fluent/fluent.conf
 ENTRYPOINT ["/usr/bin/fluentd", "-c", "/etc/fluent/fluent.conf"]
