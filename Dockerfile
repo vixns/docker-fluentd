@@ -1,19 +1,14 @@
-FROM gliderlabs/alpine:3.2
-MAINTAINER stephane.cottin@vixns.com
+FROM fluent/fluentd:v0.14.2
+WORKDIR /home/fluent
+ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
+USER root
+RUN apk --no-cache --update add sudo build-base ruby-dev && \
+    sudo -u fluent gem install fluent-plugin-prometheus fluent-plugin-kafka fluent-plugin-s3 && \
+    rm -rf /home/fluent/.gem/ruby/2.3.0/cache/*.gem && sudo -u fluent gem sources -c && \
+    apk del sudo build-base ruby-dev && rm -rf /var/cache/apk/*
 
-ENV FLUENTD_VERSION 0.12.15
+EXPOSE 24224
+COPY fluent.conf /fluentd/etc/
 
-RUN apk-install ca-certificates ruby-dev build-base jemalloc-dev && \
-  echo 'gem: --no-document' >> /etc/gemrc && \
-  gem update --system && \
-  gem install fluentd -v $FLUENTD_VERSION && \
-  gem install fluent-plugin-td && \
-  gem install fluent-plugin-rewrite-tag-filter && \
-  gem install fluent-plugin-kafka && \
-  gem install fluent-plugin-multi-format-parser && \
-  gem install fluent-plugin-docker-tag-resolver && \
-  fluentd --setup /etc/fluent
-
-ENV JEMALLOC_PATH /usr/lib/libjemalloc.so
-COPY fluentd.conf /etc/fluent/fluent.conf
-ENTRYPOINT ["/usr/bin/fluentd", "-c", "/etc/fluent/fluent.conf"]
+USER fluent
+CMD exec fluentd -c /fluentd/etc/$FLUENTD_CONF -p /fluentd/plugins $FLUENTD_OPT
