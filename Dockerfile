@@ -5,6 +5,7 @@ USER root
 RUN apk --no-cache --update add sudo build-base ruby-dev \
     && sudo -u fluent gem install \
     fluent-plugin-prometheus \
+    zookeeper \
     fluent-plugin-kafka \
     fluent-plugin-s3 \
     fluent-plugin-elasticsearch \
