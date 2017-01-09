@@ -9,6 +9,7 @@ RUN apk --no-cache --update add sudo build-base ruby-dev \
     fluent-plugin-kafka \
     fluent-plugin-s3 \
     fluent-plugin-elasticsearch \
+    fluent-plugin-geoip \
     strptime \
     && rm -rf /home/fluent/.gem/ruby/2.3.0/cache/*.gem && sudo -u fluent gem sources -c \
     && apk del sudo build-base ruby-dev && rm -rf /var/cache/apk/*
