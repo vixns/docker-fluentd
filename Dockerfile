@@ -2,7 +2,7 @@ FROM fluent/fluentd:v0.14-latest
 WORKDIR /home/fluent
 ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
 USER root
-RUN apk --no-cache --update add sudo build-base ruby-dev \
+RUN apk --no-cache --update add sudo build-base ruby-dev geoip-dev \
     && sudo -u fluent gem install \
     fluent-plugin-prometheus \
     zookeeper \
