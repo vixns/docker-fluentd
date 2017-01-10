@@ -10,6 +10,7 @@ RUN apk --no-cache --update add sudo build-base ruby-dev geoip-dev libmaxminddb-
     fluent-plugin-s3 \
     fluent-plugin-elasticsearch \
     strptime \
+    fluent-plugin-multi-format-parser \
     && git clone https://github.com/okkez/fluent-plugin-geoip.git -b support-geoip2 \
     && cd fluent-plugin-geoip \
     && bundle \
