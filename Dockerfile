@@ -17,7 +17,7 @@ RUN apk --no-cache --update add sudo build-base ruby-dev geoip-dev libmaxminddb-
     && gem install fluent-plugin-geoip-0.6.1.gem \
     && rm -rf /home/fluent/fluent-plugin-geoip \
     && cd / && rm -rf /home/fluent/.gem/ruby/2.3.0/cache/*.gem && sudo -u fluent gem sources -c \
-    && apk del sudo build-base ruby-dev git geoip-dev libmaxminddb-dev ruby-bundler && rm -rf /var/cache/apk/*
+    && apk del sudo build-base ruby-dev git ruby-bundler && rm -rf /var/cache/apk/*
 
 EXPOSE 24224
 COPY fluent.conf /fluentd/etc/
