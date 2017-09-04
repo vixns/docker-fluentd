@@ -1,7 +1,7 @@
 FROM fluent/fluentd:v0.14-latest
 WORKDIR /home/fluent
 ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
-RUN apk --no-cache --update add build-base ruby-dev geoip-dev libmaxminddb-dev snappy-dev ruby-bundler \
+RUN apk --no-cache --update add build-base ruby-dev geoip geoip-dev libmaxminddb libmaxminddb-dev snappy-dev ruby-bundler \
     && gem install \
     fluent-plugin-prometheus \
     zookeeper \
@@ -10,10 +10,12 @@ RUN apk --no-cache --update add build-base ruby-dev geoip-dev libmaxminddb-dev s
     fluent-plugin-s3 \
     fluent-plugin-elasticsearch \
     strptime \
+    geoip2_c \
+    geoip2_compat \
     fluent-plugin-multi-format-parser \
     fluent-plugin-geoip \
     && rm -rf /home/fluent/.gem/ruby/2.3.0/cache/*.gem && gem sources -c \
-    && apk del build-base ruby-dev ruby-bundler && rm -rf /var/cache/apk/*
+    && apk del build-base ruby-dev geoip-dev libmaxminddb-dev ruby-bundler && rm -rf /var/cache/apk/*
 
 EXPOSE 24224
 COPY fluent.conf /fluentd/etc/
