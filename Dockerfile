@@ -1,4 +1,4 @@
-FROM fluent/fluentd:v0.14-latest
+FROM fluent/fluentd:v1.0
 WORKDIR /home/fluent
 ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
 RUN apk --no-cache --update add build-base ruby-dev geoip-dev libmaxminddb-dev snappy-dev ruby-bundler \
