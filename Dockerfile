@@ -8,6 +8,7 @@ RUN apk --no-cache --update add build-base ruby-dev geoip geoip-dev libmaxminddb
     snappy \
     fluent-plugin-kafka \
     fluent-plugin-s3 \
+    fluent-plugin-sentry \
     fluent-plugin-elasticsearch \
     strptime \
     geoip2_c \
