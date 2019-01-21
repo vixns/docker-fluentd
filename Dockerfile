@@ -1,8 +1,9 @@
-FROM fluent/fluentd:v1.0
-WORKDIR /home/fluent
-ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
-RUN apk --no-cache --update add build-base ruby-dev geoip geoip-dev libmaxminddb libmaxminddb-dev snappy-dev ruby-bundler \
-    && gem install \
+FROM fluent/fluentd:v1.3-debian-onbuild-1
+USER root
+RUN buildDeps="sudo make gcc g++ libc-dev ruby-dev libgeoip-dev libmaxminddb-dev libsnappy-dev patch" \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends libgeoip1 libmaxminddb0 $buildDeps \
+ && sudo gem install \
     fluent-plugin-prometheus \
     zookeeper \
     snappy \
@@ -16,10 +17,18 @@ RUN apk --no-cache --update add build-base ruby-dev geoip geoip-dev libmaxminddb
     fluent-plugin-multi-format-parser \
     fluent-plugin-genhashvalue \
     fluent-plugin-geoip \
-    && rm -rf /home/fluent/.gem/ruby/2.3.0/cache/*.gem && gem sources -c \
-    && apk del build-base ruby-dev geoip-dev libmaxminddb-dev ruby-bundler && rm -rf /var/cache/apk/*
+    fluent-plugin-record-modifier \
+    --no-document \
+ && sudo gem sources --clear-all \
+ && SUDO_FORCE_REMOVE=yes \
+    apt-get purge -y --auto-remove \
+                  -o APT::AutoRemove::RecommendsImportant=false \
+                  $buildDeps \
+ && rm -rf /var/lib/apt/lists/* \
+           /home/fluent/.gem/ruby/2.3.0/cache/*.gem
 
-EXPOSE 24224
 COPY fluent.conf /fluentd/etc/
+USER fluent
+ENV FLUENTD_CONF=fluent.conf
 
 CMD exec fluentd -c /fluentd/etc/$FLUENTD_CONF -p /fluentd/plugins $FLUENTD_OPT
